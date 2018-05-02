@@ -21,6 +21,7 @@ function CollectionListing(shopify) {
 
 assign(CollectionListing.prototype, pick(base, [
   'get',
+  'create',
   'list',
   'buildUrl'
 ]));
@@ -35,6 +36,20 @@ assign(CollectionListing.prototype, pick(base, [
 CollectionListing.prototype.productIds = function productIds(id) {
   const url = this.buildUrl(`${id}/product_ids`);
   return this.shopify.request(url, 'GET', 'product_ids');
+};
+
+/**
+ * Creates a collection listing.
+ *
+ * @param {Number} collectionId The ID of the collection to publish
+ * @param {Object} [params] Body parameters
+ * @return {Promise} Promise that resolves with the result
+ * @public
+ */
+CollectionListing.prototype.create = function create(collectionId, params) {
+  params || (params = { collection_id: collectionId });
+  const url = this.buildUrl(collectionId);
+  return this.shopify.request(url, 'PUT', this.key, params);
 };
 
 module.exports = CollectionListing;
